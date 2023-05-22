@@ -1,0 +1,45 @@
+version: "3.9"
+services:
+  storeapi:
+    build: .
+    ports:
+      - $NODE_LOCAL_PORT:$NODE_DOCKER_PORT
+    links:
+      - storedb
+    env_file: 
+      - .env
+    environment: 
+      - MONGO_URI=$MONGO_URI
+      - CLOUDINARY_NAME=$CLOUDINARY_NAME
+      - CLOUDINARY_KEY=$CLOUDINARY_KEY 
+      - CLOUDINARY_SECRET=$CLOUDINARY_SECRET
+      - OPCO_HOST=$OPCO_HOST
+      - OPCO_USER=$OPCO_USER
+      - OPCO_PASSWORD=$OPCO_PASSWORD
+      - BACKEND_HOST=$BACKEND_HOST
+      - BACKEND_USER=$BACKEND_USER
+      - BACKEND_PASSWORD=$BACKEND_PASSWORD
+      - SUBWAY_HOST=$SUBWAY_HOST
+      - SUBWAY_USER=$SUBWAY_USER
+      - SUBWAY_PASSWORD=$SUBWAY_PASSWORD
+      - AOEX_HOST=$AOEX_HOST
+      - AOEX_USER=$AOEX_USER
+    stdin_open: true
+    tty: true
+     
+  storedb:
+    image: mongo
+    ports:
+      - $MONGODB_LOCAL_PORT:$MONGODB_DOCKER_PORT
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=$MONGODB_USER
+      - MONGO_INITDB_ROOT_PASSWORD=$MONGODB_PASSWORD
+      - MONGO_INITDB_DATABASE=$MONGODB_DB
+    env_file:
+      - .env
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
+    

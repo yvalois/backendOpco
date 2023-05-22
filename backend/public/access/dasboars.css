@@ -1,0 +1,18 @@
+*{
+    margin: 0;
+    padding: 0;
+  
+}
+
+body{
+    background-color: #1b1f27;
+
+}
+
+.store{
+    color: #fff;
+}
+
+.card{
+    color: #000!important;
+}

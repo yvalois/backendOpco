@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    <link rel="stylesheet" href="./dasboars.css">
+  </head>
+  <body>
+    <main>
+        <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
+            <div class="container">
+              <a class="navbar-brand" href="#">Administrador</a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mb-2 mb-lg-0 ms-auto">
+                  <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">tiendas</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="./usuarios.html">usuarios</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="../index.html">logout</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </nav>
+    </main>
+    <section class="store">
+        <div class="container tittle text-center my-5">
+            <h1>Tiendas</h1>
+        </div>
+        <div class="container">
+            <div class="row">
+                <h3>crear tienda</h3>
+                <div class="col mt-4">
+                    <label for="nombre">Nombre: </label>
+                    <input type="text" name="nombre" id="nombre" placeholder="nombre">
+                    <button class="btn btn-primary">Crear</button>
+                </div>
+            </div>
+            <div class="row lista my-5">
+                <h3>lista de tiendas</h3>
+                <div class="col mt-4">
+
+                 
+                </div>
+            </div>
+        </div>
+      </section>
+    <script>
+      var token = localStorage.getItem('token-admin');
+      if(token == null){
+        window.location.href = '../index.html';
+      }
+      const user = fetch('/api/user/user', {
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer ' + token
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+      })
+      .catch(error => {
+      console.log(error)
+      window.location.href = '../index.html';
+      });
+
+      var stores = fetch('/api/stores/', {
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer ' + token
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        //map para mostrar los datos en la lista
+        var lista = document.querySelector('.lista');
+        var lista_html = '';
+        data.forEach(function(store){
+          lista_html += `
+          <div class="col-md-4 my-3">
+            <div class="card">
+              <div class="card-body">
+                <h5 id="store-name" class="card-title">${store.name}</h5>
+                <p id="store-id" class="card-text">${store._id}</p>
+                <btn id="btn-store" class="btn btn-primary">Ver</btn>
+              </div>
+            </div>
+          </div>
+          `;
+        });
+        lista.innerHTML = lista_html;
+      })
+      .catch(error => {
+      console.log(error)
+      });
+
+    
+      var btn_store = document.querySelectorAll('#btn-store');
+      btn_store.forEach(function(btn){
+        btn.addEventListener('click', function(){
+          var id = this.parentElement.parentElement.querySelector('#store-id').innerHTML;
+          window.location.href = './store.html?id=' + id;
+        });
+      });
+
+      var btn_create = document.querySelector('#btn-create');
+      btn_create.addEventListener('click', function(){
+        var nombre = document.querySelector('#nombre').value;
+        var data = {
+          name: nombre
+        };
+        fetch('https://storeapi.store/api/stores/', {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Bearer ' + token,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+          window.location.href = './dashboard.html';
+        })
+        .catch(error => {
+        console.log(error)
+        });
+      });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+  </body>
+</html>

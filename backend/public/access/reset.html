@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../index.css">
+    <title>Store APi</title>
+</head>
+<body>
+    <section class="area-login">
+        <h1>Nueva contraseña</h1>
+        <div class="login">
+          <div>
+            <!-- <img src="https://img.icons8.com/fluency/240/000000/google-logo.png" /> -->
+          </div>
+          <form id="recover-form">
+            <input type="password" name="password" id="new-password" autofocus placeholder="contraseña"/>
+            <input type="password" name="confirmPassword" id="confirm" placeholder="confirmar contraseña" />
+            <input type="submit" value="entrar" />
+          </form>
+        </div>
+      </section>
+      <script>
+        var newFormData = document.getElementById('recover-form');
+        var passwordAlreadyReset = false;
+        var tokenNotValid = false;
+        newFormData.addEventListener('submit', function(e){
+          e.preventDefault();
+          var password = e.target.password.value;
+          var confirmPassword = e.target.confirmPassword.value;
+          if(password != confirmPassword){
+            alert('las contraseñas no coinciden');
+          }else{
+            var data = {
+              password: password
+            };
+            var token = location.search.split('=')[1];
+            fetch('/api/user/recover', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+              },
+              body: JSON.stringify(data)
+            })
+            .then(function(response){
+              return response.json();
+            })
+            .then(function(data){
+              if(data.status == 'ok'){
+                alert('contraseña cambiada');
+                passwordAlreadyReset = true;
+              }else{
+                alert('error');
+              }
+            })
+            .catch(function(error){
+              console.log(error);
+              alert('error');
+              tokenNotValid = true;
+            });
+          }
+        });
+    
+        
+      </script>
+</body>
+</html>

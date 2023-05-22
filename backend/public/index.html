@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./index.css">
+    <title>Store APi</title>
+</head>
+<body>
+    <section class="area-login">
+        <h1>Acceso store admin</h1>
+        <div class="login">
+          <div>
+            <!-- <img src="https://img.icons8.com/fluency/240/000000/google-logo.png" /> -->
+          </div>
+          <form id="form-data" >
+            <input 
+            type="text" 
+            name="email" 
+            id="email" 
+            placeholder="email@email.com" 
+            autofocus 
+            required
+          
+            />
+            <input 
+            type="password" 
+            name="contraseña"
+            id="password"
+            placeholder="contraseña"
+            required
+             />
+            <input type="submit" value="entrar" id="form-login" />
+          </form>
+    
+        </div>
+      </section>
+      <script>
+        if(localStorage.getItem('token-admin')){
+          window.location.href = '/dashboard';
+        }
+        var newFormData = document.getElementById('form-data');
+        newFormData.addEventListener('submit', function(e){
+          e.preventDefault();
+          var email = e.target.email.value;
+          var password = e.target.contraseña.value;
+          var data = {
+            email: email,
+            password: password
+          };
+          fetch('/api/user/adminlogin', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+          })
+          .then(function(response){
+            return response.json();
+          })
+          .then(function(data){
+            if(data.status == 'success'){
+              localStorage.setItem('token-admin', data.token);
+              window.location.href = '/dashboard';
+            }else{
+              alert(data.message);
+            }
+          })
+          .catch(function(error){
+            console.log(error);
+          });
+          
+        });
+        
+          
+      </script>
+</body>
+    
+</html>
