@@ -10,8 +10,8 @@ const signUpUser = async (req, res) => {
   const {email, fullName, password, storeId} = req.body;
   try {
     const userExist = await User.findOne({email, storeId})
-    if (userExist) {
-      return res.status(400).json({message: 'User already exist'})
+    if (userExist != null) {
+      return res.status(500).json({message: 'User already exist'})
     }
     const hash = await bcrypt.hash(password, 8)
     const verificationCode = createRandom4DigitCode();

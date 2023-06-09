@@ -132,7 +132,7 @@ const sendResetPassword = async (storeId, user, verificationCode) => {
     let storeName = '';
     let provider = '';
     try {
-        if (storeId == OPCOSTORE|| storeId == BACKENDSTORE) {
+        if (storeId == OPCOSTORE || storeId == BACKENDSTORE) {
                 sender = 'no-reply@opencoffee.io';
                 receiver = `${user.email}`;
                 storeName = 'OpenCoffee';
